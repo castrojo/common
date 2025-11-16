@@ -1,4 +1,4 @@
-name: Build Common Files
+name: Build
 on:
   pull_request:
     branches:
