@@ -76,7 +76,7 @@ toggle-devmode:
         ujust install-system-flatpaks 1
     fi
     if gum choose "Do you want to install extra monospace fonts?" ; then
-        ujust bluefin-fonts
+        brew bundle install --file=/usr/share/ublue-os/homebrew/fonts.Brewfile
     fi
 
 # Configure docker,incus-admin,libvirt, container manager, serial permissions
