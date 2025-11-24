@@ -8,6 +8,7 @@ bios:
     #!/usr/bin/bash
     if [ ! -d /sys/firmware/efi ]; then
       echo "Rebooting to legacy BIOS from OS is not supported."
+      exit 1
     fi
 
     if gum confirm "Reboot into BIOS?" ; then
