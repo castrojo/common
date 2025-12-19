@@ -54,7 +54,8 @@ brew "envoy"
 brew "falco"
 
 # Fluentd
-brew "td-agent"
+# Not available via brew
+# brew "td-agent" Warning: td-agent has been deprecated because it is discontinued upstream! It will be disabled on 2026-03-01.
 
 # Flux
 brew "flux"

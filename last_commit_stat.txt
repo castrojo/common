@@ -1,9 +1,0 @@
-commit d4b4e7c7daad8111f5b27b8e35a81033605721d2
-Author: James Reilly <jreilly1821@gmail.com>
-Date:   Fri Dec 19 16:31:11 2025 +0530
-
-    refactor: parallelize Brewfile validation in CI and update `k0s` to `k0sctl` formula.
-
- .github/workflows/validate-brewfiles.yaml          | 55 +++++++---------------
- .../usr/share/ublue-os/homebrew/cncf.Brewfile      |  2 +-
- 2 files changed, 19 insertions(+), 38 deletions(-)
