@@ -4,7 +4,7 @@
 # Configure Bluefin-CLI Terminal Experience with Brew
 [group('System')]
 bluefin-cli:
-    @/usr/bin/ublue-bling
+    @ublue-bling
 
 # alias for toggle-devmode
 devmode:
