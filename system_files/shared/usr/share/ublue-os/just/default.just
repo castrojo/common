@@ -153,7 +153,7 @@ device-info:
 # Measure Idle Power Draw
 check-idle-power-draw:
     #!/usr/bin/bash
-    if grep -i centos "/etc/os-release" ; then
+    if grep -qi centos "/etc/os-release" ; then
         echo "Powerstat is not available yet."
         exit 1
     fi
