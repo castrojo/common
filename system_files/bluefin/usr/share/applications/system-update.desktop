@@ -1,7 +1,9 @@
 [Desktop Entry]
 Type=Application
 Name=System Update
+Name[fr]=Mises à jour
 Comment=Update Bluefin, Flatpaks, Distrobox containers, and more
+Name[fr]=Mettre à jour Bluefin, les applications, les conteneurs, etc...
 Icon=ublue-update
 Categories=ConsoleOnly;System;
 Terminal=true

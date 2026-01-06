@@ -6,5 +6,6 @@ Exec=xdg-open https://docs.projectbluefin.io/
 Icon=ublue-docs
 Name=Documentation
 Comment=Bluefin documentation
+Comment[fr]=Documentation de Bluefin
 Keywords=Bluefin;Help;Docs;Instructions
 Categories=Utility;
