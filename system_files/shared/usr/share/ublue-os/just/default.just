@@ -130,7 +130,7 @@ check-local-overrides:
           -e "/Files/ s/\$/&${RESET}/g" \
           -e "/Only in/ s/^/${GREEN_COLOR}&/g" \
           -e "/Only in/ s/\$/&${RESET}/g" \
-          -e "s/\:.*/${RESET}${YELLOW_COLOR}&${RESET}/g" \
+          -e "s/\:.*/${RESET}${YELLOW_COLOR}&${RESET}/g"
 
 # Gather device info to a pastebin
 device-info:
