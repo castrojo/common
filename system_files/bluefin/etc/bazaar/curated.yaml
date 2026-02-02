@@ -190,6 +190,7 @@ rows:
             - io.github.kelvinnovais.Kasasa
             - de.schmidhuberj.DieBahn
             - com.github.maoschanz.drawing
+            - io.github.sitraorg.sitra
 
   - sections:
       - expand-horizontally: true
@@ -416,6 +417,7 @@ rows:
             - app.drey.Elastic
             - io.github.mfat.sshpilot
             - io.github.shonebinu.Brief
+            - io.github.getnf.embellish
 
   - sections:
       - expand-horizontally: true
