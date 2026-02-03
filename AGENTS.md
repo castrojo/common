@@ -212,6 +212,63 @@ When adding new labels, follow the prefix/color pattern above:
 - All `size/` labels use `#3fb950` (dark green)
 - `area/` labels use domain-specific Catppuccin Mocha colors
 
+## Pull Request Workflow
+
+**When creating a PR to projectbluefin/common**, follow this workflow:
+
+### 1. Create Feature Branch
+```bash
+git checkout -b feat/your-feature-name
+# Use conventional commit prefixes: feat/, fix/, docs/, ci/, refactor/
+```
+
+### 2. Make Changes and Track with Beads
+```bash
+bd create --title="Your task" --type=feature --priority=2
+bd update <id> --status=in_progress
+# ... make your changes ...
+bd close <id>
+```
+
+### 3. Squash Before Push (MANDATORY)
+**CRITICAL:** Always squash your commits before pushing to your fork.
+
+```bash
+# Interactive rebase to squash all commits
+git rebase -i main
+
+# In the editor, keep first 'pick', change others to 'squash' or 's'
+# Edit the final commit message to follow conventional commits
+
+# Verify single commit
+git log --oneline -5
+```
+
+### 4. Push to Your Fork
+```bash
+# Push squashed commit to your fork
+git push origin feat/your-feature-name
+
+# If you had previously pushed, force push the squashed version
+git push origin feat/your-feature-name --force-with-lease
+```
+
+### 5. Open PR in Browser (MANDATORY)
+**CRITICAL:** Always open the PR in the browser so the user can edit it themselves.
+
+```bash
+# Open PR creation page in browser
+gh pr create --web --repo projectbluefin/common
+```
+
+**DO NOT** use `gh pr create` with `--title` or `--body` flags. The user must have full control to edit the PR description, title, and details in the GitHub web interface.
+
+### PR Guidelines
+- **Commit message format:** Follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#specification)
+- **Single commit:** PRs should contain exactly one squashed commit
+- **Clear description:** User will add context in web interface
+- **Reference issues:** Link related beads issues if applicable
+
 ## Other Rules
 
 - Use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) for all commits and PR titles
@@ -232,3 +289,29 @@ Example:
 ```text
 Assisted-by: Claude 3.5 Sonnet via GitHub Copilot
 ```
+
+## Landing the Plane (Session Completion)
+
+**When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
+
+**MANDATORY WORKFLOW:**
+
+1. **File issues for remaining work** - Create issues for anything that needs follow-up
+2. **Run quality gates** (if code changed) - Tests, linters, builds
+3. **Update issue status** - Close finished work, update in-progress items
+4. **PUSH TO REMOTE** - This is MANDATORY:
+   ```bash
+   git pull --rebase
+   bd sync
+   git push
+   git status  # MUST show "up to date with origin"
+   ```
+5. **Clean up** - Clear stashes, prune remote branches
+6. **Verify** - All changes committed AND pushed
+7. **Hand off** - Provide context for next session
+
+**CRITICAL RULES:**
+- Work is NOT complete until `git push` succeeds
+- NEVER stop before pushing - that leaves work stranded locally
+- NEVER say "ready to push when you are" - YOU must push
+- If push fails, resolve and retry until it succeeds
