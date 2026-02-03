@@ -242,17 +242,20 @@ When adding new labels, follow the prefix/color pattern above:
 
 **1. Git Configuration:**
 ```bash
-# .beads/ is tracked in your fork for collaboration
-# .beads/.gitignore already excludes runtime files (*.db, daemon.*, etc.)
-# .gitattributes configures beads merge driver
+# .beads/ is tracked locally for task management
+# .git/info/exclude prevents accidental commits (beads fork protection)
+# .beads/.gitignore excludes runtime files (*.db, daemon.*, etc.)
+# .gitattributes configures beads merge driver (tracked in fork main only)
 
-# When creating PRs, these files are excluded from feature branches
+# To track beads in fork main branch:
+# Remove .git/info/exclude lines when explicitly committing beads to fork
+# Always restore protection before creating feature branches
 ```
 
 **2. Branch Strategy:**
 ```bash
 # Main branch (local): Contains beads + AGENTS.md
-git checkout main  # Has .beads/, .gitattributes, AGENTS.md
+git checkout main  # Has .gitattributes, AGENTS.md (beads tracked locally)
 
 # Feature branches: Clean, no beads metadata
 git checkout -b feat/add-firefox-config
@@ -263,7 +266,7 @@ git checkout -b feat/add-firefox-config
 **3. PR Creation Rules:**
 - Feature branches must NOT contain `.beads/`, `.gitattributes`, or `AGENTS.md`
 - Only commit actual changes relevant to the feature
-- Beads tracking happens on main branch in your fork
+- Beads tracking happens locally (not pushed to any remote)
 - PRs to projectbluefin/common are minimal and clean
 
 ### Workflow Integration
