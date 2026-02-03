@@ -666,9 +666,11 @@ git push origin main  # Push to castrojo/common fork
 4. Only `castrojo/common` main branch has `.beads/` committed
 5. Beads data syncs via fork, never to upstream
 
-## Pull Request Workflow
+## Pull Request Workflow (Universal for ALL Repositories)
 
-**When creating a PR to projectbluefin/common**, follow this workflow:
+**CRITICAL:** This workflow applies to ALL PRs from `castrojo/*` forks to ANY upstream repository (projectbluefin/*, ublue-os/*, etc.)
+
+**When creating a PR to ANY upstream repository**, follow this workflow:
 
 ### 1. Create Feature Branch
 ```bash
@@ -711,8 +713,15 @@ git push origin feat/your-feature-name --force-with-lease
 **CRITICAL:** Always open the PR in the browser so the user can edit it themselves.
 
 ```bash
-# Open PR creation page in browser
+# Open PR creation page in browser for the appropriate upstream
+gh pr create --web --repo <upstream-org>/<upstream-repo>
+
+# Examples:
 gh pr create --web --repo projectbluefin/common
+gh pr create --web --repo ublue-os/bluefin
+gh pr create --web --repo ublue-os/bluefin-lts
+gh pr create --web --repo projectbluefin/dakota
+gh pr create --web --repo projectbluefin/documentation
 ```
 
 **DO NOT** use `gh pr create` with `--title` or `--body` flags. The user must have full control to edit the PR description, title, and details in the GitHub web interface.
@@ -722,6 +731,12 @@ gh pr create --web --repo projectbluefin/common
 - **Single commit:** PRs should contain exactly one squashed commit
 - **Clear description:** User will add context in web interface
 - **Reference issues:** Link related beads issues if applicable
+
+**This workflow applies to ALL upstream repositories:**
+- projectbluefin/* (common, dakota, iso, egg, brew, documentation, website, etc.)
+- ublue-os/* (bluefin, bluefin-lts, etc.)
+
+**Every PR from castrojo namespace MUST be squashed before push.**
 
 ## Other Rules
 
