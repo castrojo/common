@@ -242,31 +242,27 @@ When adding new labels, follow the prefix/color pattern above:
 
 **1. Git Configuration:**
 ```bash
-# .beads/ is tracked locally for task management
-# .git/info/exclude prevents accidental commits (beads fork protection)
+# .beads/ is tracked in castrojo/common fork (main branch only)
 # .beads/.gitignore excludes runtime files (*.db, daemon.*, etc.)
-# .gitattributes configures beads merge driver (tracked in fork main only)
-
-# To track beads in fork main branch:
-# Remove .git/info/exclude lines when explicitly committing beads to fork
-# Always restore protection before creating feature branches
+# .gitattributes configures beads merge driver for collaboration
+# Fork main branch has full beads tracking for shared task management
 ```
 
 **2. Branch Strategy:**
 ```bash
-# Main branch (local): Contains beads + AGENTS.md
-git checkout main  # Has .gitattributes, AGENTS.md (beads tracked locally)
+# Main branch: Contains beads + AGENTS.md (pushed to castrojo/common)
+git checkout main  # Has .beads/, .gitattributes, AGENTS.md tracked in fork
 
 # Feature branches: Clean, no beads metadata
 git checkout -b feat/add-firefox-config
-# Work tracked in beads, but beads files NOT committed to feature branch
+# Work tracked in beads on main, but beads files NOT in feature branch
 # Only commit actual feature changes (system_files/, etc.)
 ```
 
 **3. PR Creation Rules:**
 - Feature branches must NOT contain `.beads/`, `.gitattributes`, or `AGENTS.md`
 - Only commit actual changes relevant to the feature
-- Beads tracking happens locally (not pushed to any remote)
+- Beads tracking syncs via fork's main branch
 - PRs to projectbluefin/common are minimal and clean
 
 ### Workflow Integration
@@ -313,6 +309,7 @@ git log feat/add-firefox-config --oneline
 3. **Full tracking:** You maintain complete task history in fork
 4. **Isolation:** Beads workflow doesn't pollute production repo
 5. **Flexibility:** AGENTS.md updates pushed to fork when ready, not with every PR
+6. **Collaboration:** Beads data syncs via fork for team task visibility
 
 ### AGENTS.md Updates
 
