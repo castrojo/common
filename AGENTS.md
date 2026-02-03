@@ -212,6 +212,114 @@ When adding new labels, follow the prefix/color pattern above:
 - All `size/` labels use `#3fb950` (dark green)
 - `area/` labels use domain-specific Catppuccin Mocha colors
 
+## Beads Isolation Strategy
+
+**CRITICAL:** This repository uses beads for local task tracking, but beads metadata **MUST NEVER** be pushed to projectbluefin/common.
+
+### Repository Structure
+- **Upstream:** `projectbluefin/common` - Clean, production repository (NO beads)
+- **Fork:** `castrojo/common` - Development fork with beads tracking
+- **Local:** Full beads configuration in `.beads/` directory
+
+### What Gets Pushed Where
+
+**To projectbluefin/common (via PR):**
+- ✅ Configuration files in `system_files/`
+- ✅ `Containerfile` changes
+- ✅ `.github/workflows/` updates
+- ✅ `README.md` documentation
+- ❌ **NEVER** `.beads/` directory
+- ❌ **NEVER** `.gitattributes` (contains beads merge config)
+- ❌ **NEVER** `AGENTS.md` (this file stays in fork only)
+
+**To castrojo/common (fork):**
+- ✅ All beads configuration (`.beads/` directory)
+- ✅ `.gitattributes` (for beads merge strategy)
+- ✅ `AGENTS.md` (agent instructions - **periodically** when requested)
+- ✅ Local development branches
+
+### Isolation Enforcement
+
+**1. Git Configuration:**
+```bash
+# .beads/ is tracked in your fork for collaboration
+# .beads/.gitignore already excludes runtime files (*.db, daemon.*, etc.)
+# .gitattributes configures beads merge driver
+
+# When creating PRs, these files are excluded from feature branches
+```
+
+**2. Branch Strategy:**
+```bash
+# Main branch (local): Contains beads + AGENTS.md
+git checkout main  # Has .beads/, .gitattributes, AGENTS.md
+
+# Feature branches: Clean, no beads metadata
+git checkout -b feat/add-firefox-config
+# Work tracked in beads, but beads files NOT committed to feature branch
+# Only commit actual feature changes (system_files/, etc.)
+```
+
+**3. PR Creation Rules:**
+- Feature branches must NOT contain `.beads/`, `.gitattributes`, or `AGENTS.md`
+- Only commit actual changes relevant to the feature
+- Beads tracking happens on main branch in your fork
+- PRs to projectbluefin/common are minimal and clean
+
+### Workflow Integration
+
+**Starting a new feature:**
+```bash
+# On main branch (has beads)
+bd create --title="Add Firefox config" --type=feature --priority=2
+bd update bluefin-common-1 --status=in_progress
+
+# Create clean feature branch
+git checkout -b feat/add-firefox-config
+
+# Make ONLY the feature changes
+# Do NOT commit .beads/, .gitattributes, or AGENTS.md
+
+# Commit feature changes
+git add system_files/usr/share/ublue-os/firefox-config/
+git commit -m "feat: add Firefox privacy defaults"
+
+# Return to main to update beads
+git checkout main
+bd close bluefin-common-1
+git commit -m "docs: close beads issue for Firefox config"
+
+# Back to feature branch for PR
+git checkout feat/add-firefox-config
+```
+
+**Verification Before PR:**
+```bash
+# Ensure feature branch is clean
+git diff main feat/add-firefox-config -- .beads .gitattributes AGENTS.md
+# Should show NO differences (these files not in feature branch)
+
+git log feat/add-firefox-config --oneline
+# Should show ONLY feature commits, no beads updates
+```
+
+### Why This Matters
+
+1. **Clean PRs:** Upstream maintainers see only relevant changes
+2. **No confusion:** projectbluefin/common stays beads-free
+3. **Full tracking:** You maintain complete task history in fork
+4. **Isolation:** Beads workflow doesn't pollute production repo
+5. **Flexibility:** AGENTS.md updates pushed to fork when ready, not with every PR
+
+### AGENTS.md Updates
+
+**This file (AGENTS.md):**
+- Lives in `castrojo/common` fork only
+- Updated frequently during development
+- Pushed to fork periodically when requested
+- **NEVER** included in PRs to projectbluefin/common
+- Evolves independently from production changes
+
 ## Pull Request Workflow
 
 **When creating a PR to projectbluefin/common**, follow this workflow:
