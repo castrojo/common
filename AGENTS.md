@@ -28,6 +28,12 @@ This repo is the **source of truth** for:
 - `projectbluefin/common` is canonical; sync others to match it
 - Known drift exists — see project-notes.md for the full inventory
 
+## Skills
+
+cat ~/src/skills/workflow/SKILL.md         # git push confirmation, CI watch, upstream PR rules
+cat ~/src/skills/bluefin-build/SKILL.md    # build, validation, PR workflow
+cat ~/src/skills/oci-images/SKILL.md       # OCI image patterns
+
 ## Session Start
 
 ```bash
