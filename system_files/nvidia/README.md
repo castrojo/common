@@ -5,6 +5,8 @@ This layer is applied on top of `shared/` and `bluefin/` only for the NVIDIA GPU
 ## Current contents
 
 - `usr/lib/systemd/system/` — NVIDIA-specific systemd unit(s)
+- `usr/lib/systemd/system-preset/` — presets enabling CDI and sleep/suspend services
+- `usr/lib/modprobe.d/` — kernel module options (e.g., sleep VRAM preservation)
 - `usr/libexec/` — `ublue-nvidia-flatpak-runtime-sync` script
 
 ## Adding NVIDIA-specific configuration

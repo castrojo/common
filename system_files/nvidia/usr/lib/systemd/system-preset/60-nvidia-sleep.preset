@@ -1,0 +1,15 @@
+# Enable NVIDIA power-management suspend/hibernate/resume services.
+#
+# xorg-x11-drv-nvidia-power ships three systemd services that save and restore
+# GPU state around suspend and hibernate.  They are disabled by default; this
+# preset enables them so that sleep/wake works reliably on NVIDIA systems.
+#
+# Without these services the NVIDIA kernel module does not properly save VRAM
+# across a suspend cycle, causing the system to immediately wake from sleep
+# (the GPU signals a spurious wakeup a few seconds after the machine suspends).
+#
+# See also: system_files/nvidia/usr/lib/modprobe.d/nvidia-sleep.conf
+#           which sets NVreg_PreserveVideoMemoryAllocations=1.
+enable nvidia-suspend.service
+enable nvidia-hibernate.service
+enable nvidia-resume.service

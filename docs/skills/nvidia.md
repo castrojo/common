@@ -1,8 +1,8 @@
 ---
 name: nvidia
-version: "1.0"
-last_updated: "2026-06-23"
-tags: [nvidia, gpu, drivers, akmods]
+version: "1.1"
+last_updated: "2026-07-28"
+tags: [nvidia, gpu, drivers, akmods, sleep, suspend, power-management]
 description: >-
   NVIDIA GPU support architecture and update procedures. Use when editing
   nvidia files in system_files/nvidia/, bluefin scripts, or dakota elements.
@@ -98,6 +98,13 @@ containers fail to access GPUs because bootc does not use cgroup device delegati
   `ublue-nvidia-flatpak-runtime-sync.service` (TimeoutStartSec=900).
 - `system_files/nvidia/usr/lib/systemd/system-preset/80-nvidia-container-toolkit.preset` —
   enables `nvidia-cdi-refresh.{path,service}` for CDI spec auto-generation.
+- `system_files/nvidia/usr/lib/systemd/system-preset/60-nvidia-sleep.preset` —
+  enables `nvidia-suspend.service`, `nvidia-hibernate.service`, and `nvidia-resume.service`
+  (provided by `xorg-x11-drv-nvidia-power`) so GPU state is saved/restored across sleep
+  cycles. Without this, systems wake spuriously a few seconds after suspending.
+- `system_files/nvidia/usr/lib/modprobe.d/nvidia-sleep.conf` —
+  sets `NVreg_PreserveVideoMemoryAllocations=1 NVreg_TemporaryFilePath=/var/tmp`; required
+  alongside the sleep preset for the driver to actually save VRAM on suspend.
 
 Changes here flow into **all** nvidia-variant images at next build. Be surgical.
 
@@ -199,6 +206,46 @@ distrobox enter cuda-dev
 
 ---
 
+## Sleep / Suspend power management
+
+NVIDIA systems can wake spontaneously a few seconds after suspending when the driver does
+not save GPU VRAM state. The fix is two files in `system_files/nvidia/`:
+
+### How it works
+
+1. `usr/lib/modprobe.d/nvidia-sleep.conf` loads two kernel module options at boot:
+   - `NVreg_PreserveVideoMemoryAllocations=1` — instructs the driver to save VRAM on suspend
+   - `NVreg_TemporaryFilePath=/var/tmp` — where the snapshot goes during hibernate (`/var/tmp`
+     survives across boots, unlike `/tmp` which is tmpfs)
+2. `usr/lib/systemd/system-preset/60-nvidia-sleep.preset` enables three systemd services
+   provided by `xorg-x11-drv-nvidia-power`:
+   - `nvidia-suspend.service` — saves GPU state before system suspends
+   - `nvidia-resume.service` — restores GPU state after resume
+   - `nvidia-hibernate.service` — saves GPU state before hibernate
+
+Both files are required together — the modprobe option alone is not enough, and the services
+alone will not save VRAM without the kernel option.
+
+### Debugging sleep issues
+
+```bash
+# Verify the modprobe option is active
+cat /proc/driver/nvidia/params | grep PreserveVideoMemory
+
+# Check service status
+systemctl status nvidia-suspend.service nvidia-resume.service nvidia-hibernate.service
+
+# Watch for spurious wake events in journal
+journalctl -b -k -g "wake|resume|suspend" --no-pager
+```
+
+### Reference
+
+NVIDIA power management documentation:
+https://download.nvidia.com/XFree86/Linux-x86_64/latest/README/powermanagement.html
+
+---
+
 ## SELinux and CDI
 
 Running NGC containers requires `--security-opt=label=disable` with Podman + CDI.
@@ -257,4 +304,6 @@ Before closing any nvidia-related PR:
 - [ ] If editing `ublue-nvidia-flatpak-runtime-sync`: both `check` (exit 0 = needs sync, exit 1 = already synced) and `sync` (installs GL extension + updates all system flatpaks) branches are consistent
 - [ ] `golang-github-nvidia-container-toolkit` exclusion in bluefin build script is still present
 - [ ] `TimeoutStartSec` in `ublue-nvidia-flatpak-runtime-sync.service` is >= 900 (GL install + full flatpak update)
+- [ ] Sleep preset (`60-nvidia-sleep.preset`) enables all three services: `nvidia-suspend`, `nvidia-hibernate`, `nvidia-resume`
+- [ ] `nvidia-sleep.conf` sets both `NVreg_PreserveVideoMemoryAllocations=1` and `NVreg_TemporaryFilePath=/var/tmp`
 - [ ] `just check` and `pre-commit run --all-files` pass clean
