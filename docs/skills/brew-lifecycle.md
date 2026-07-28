@@ -184,10 +184,12 @@ unavailable unless the tap is explicitly trusted. This affects `ublue-os/tap`
 and `ublue-os/experimental-tap` which ship VS Code, VSCodium, JetBrains,
 Antigravity, Zed, Cursor, framework_tool, asusctl-linux.
 
-**In just recipes** that call `brew tap` before cask installs:
+**In just recipes** that call `brew tap` before cask installs, use two
+separate commands — `--trust` is NOT a valid flag on `brew tap`:
 ```diff
 - brew tap ublue-os/tap 2>/dev/null || true
-+ brew tap --trust ublue-os/tap
++ brew tap ublue-os/tap
++ brew trust ublue-os/tap
 ```
 The `|| true` silencer must be removed — tap failures should surface.
 
@@ -198,19 +200,21 @@ tap "ublue-os/experimental-tap", trusted: true
 ```
 
 **Do not use `HOMEBREW_TRUSTED_TAPS` env var** — this was a Homebrew 4.x
-mechanism. The correct 6.0 approach is `--trust` at tap-time and
-`trusted: true` in Brewfiles.
+mechanism. The correct 6.0 approach is `brew tap` + `brew trust` at tap-time
+and `trusted: true` in Brewfiles. `brew tap --trust` is **not valid syntax**
+and has never been a `brew tap` flag — it will fail with "invalid option: --trust".
 
-### Known trust issues in the codebase (as of 2026-06)
+### Known trust issues in the codebase (as of 2026-07)
 
 | File | Current code | Status |
 |---|---|---|
-| `system.just` dx recipe | `brew tap --trust ublue-os/tap` | ✅ correct |
-| `system.just` dx recipe | `brew tap --trust ublue-os/experimental-tap` | ✅ correct |
-| `apps.just` install-jetbrains-toolbox | `brew tap ublue-os/homebrew-tap` | ❌ wrong tap name + no `--trust` |
-| `apps.just` bbrew recipe | `brew install Valkyrie00/homebrew-bbrew/bbrew` | ❌ 3rd-party tap, no trust |
+| `system.just` devmode recipe | `brew tap ublue-os/tap && brew trust ublue-os/tap` | ✅ correct |
+| `system.just` devmode recipe | `brew tap ublue-os/experimental-tap && brew trust ublue-os/experimental-tap` | ✅ correct |
+| `apps.just` install-jetbrains-toolbox | `brew tap ublue-os/tap && brew trust ublue-os/tap` | ✅ correct |
+| `apps.just` install-asus | `brew tap ublue-os/tap && brew trust ublue-os/tap` | ✅ correct |
 
 Ref: https://brew.sh/2026/06/11/homebrew-6.0.0/
+Ref: https://docs.brew.sh/Tap-Trust
 
 ---
 

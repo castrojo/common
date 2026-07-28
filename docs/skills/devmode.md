@@ -97,8 +97,11 @@ Groups are added via `pkexec` at the end, conditional on what was selected:
 
 ## Tap strategy
 
-- `ublue-os/tap` — tapped once if any of VS Code / VSCodium / Antigravity / JetBrains selected
-- `ublue-os/experimental-tap` — tapped once if Zed selected
+- `ublue-os/tap` — tapped + trusted (via `brew tap` then `brew trust`) once if any of VS Code / VSCodium / Antigravity / JetBrains selected
+- `ublue-os/experimental-tap` — tapped + trusted once if Zed selected
+
+Note: `brew tap --trust` is **not valid syntax** and fails with "invalid option: --trust" on Homebrew 6.0+.
+Use `brew tap <tap>` followed by `brew trust <tap>` in shell scripts, or `trusted: true` in Brewfiles.
 
 ## VS Code defaults
 
