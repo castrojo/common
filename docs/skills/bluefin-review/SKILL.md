@@ -36,9 +36,13 @@ policy; never assume a fixed approval count.
 
 ## When NOT to Use
 
-- Nobody is watching. Unattended review is out of scope; use
-  [`pr-review/SKILL.md`](../pr-review/SKILL.md), where the human decides every
-  card.
+- Nobody is watching: stop. Both review skills require a human at the
+  terminal.
+- The maintainer wants to decide every card themselves: use
+  [`pr-review/SKILL.md`](../pr-review/SKILL.md).
+- A PR carrying a [`human-gates.md`](../human-gates.md) decision (design,
+  security, cross-repo breakage): surface it at the top of the ledger instead
+  of approving.
 - Any `ublue-os/*` repository. Read-only; no writes of any kind.
 
 ## Run shape and model routing
@@ -140,7 +144,7 @@ without one and escalate judgment calls to the main session.
 
 ## 8. Ledger
 
-- Keep a running ledger at `~/src/tmp/bluefin-review-ledger.md`, updated after every action with the native `write`/`edit` tools, never shell heredocs; its first write is the prewalk handoff. Emit it at the end or per batch. Human decisions go at the top. Carry every non-landed row forward between batches.
+- Keep a running ledger per run at `~/src/tmp/bluefin-review-ledger-<YYYY-MM-DD>-<scope>.md`, updated after every action with the native `write`/`edit` tools, never shell heredocs; its first write is the prewalk handoff. One file per run, so concurrent sweeps cannot overwrite each other. Emit it at the end or per batch. Human decisions go at the top. Carry every non-landed row forward from the previous run's ledger.
 - One plain line per PR: repo#number, one-line description, outcome, and for anything not landed the single blocker and who moves next. Include cluster landing orders.
 - Outcome in {merged, queued, fixed+queued, fixed+awaiting-review, reviewed+awaiting-N-approvals, closed(reason), blocked(named blocker, who moves)}. Verified facts only; no emojis.
 
