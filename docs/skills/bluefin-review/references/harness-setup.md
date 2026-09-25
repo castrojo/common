@@ -45,6 +45,13 @@ prewalk:
   opts in. Leave lanes without one; one advisor on the main session is the
   budget.
 - Next batch: `/prewalk restart` returns to `@default` and re-arms.
+- Prewalk arms once, at session start, and disarms after its handoff. If you
+  change `modelRoles` or switch models mid-session, start a new session or run
+  `/prewalk` to re-arm it before `/bluefin-review`.
+- Confirm the handoff right after the ledger's first write: the footer model
+  should read the `@smol` model, or the session log should show a
+  `model_change` to it. If it still shows the planner, run `/prewalk` or switch
+  with `/model`.
 - Startup overrides: `omp --no-prewalk` disables it for one session;
   `omp --prewalk-into <model-or-role>` picks another target.
 
