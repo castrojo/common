@@ -173,6 +173,7 @@ queue state reading, branch update, and fork PR rebase.
 | [references/duplicate-cluster.md](references/duplicate-cluster.md) | Duplicate-cluster resolution: arm the survivor, then close the rest |
 | [references/red-check-triage.md](references/red-check-triage.md) | Classifying red checks, infra-flake correlation, `gh` CLI traps |
 | [references/dismissed-approval.md](references/dismissed-approval.md) | Dismissed-approval regression check procedure |
+| [references/stale-snapshots.md](references/stale-snapshots.md) | Re-verifying strategist/roadmap metrics before acting on a finding |
 | [references/worked-example.md](references/worked-example.md) | Worked example session |
 | [references/merge-queue.md](references/merge-queue.md) | Merge queue defaults, landing commands, fork PR rebase |
 | [references/triage-operations.md](references/triage-operations.md) | Issue triage verdicts and blast radius map |
